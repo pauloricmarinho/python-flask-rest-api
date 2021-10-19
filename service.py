@@ -1,6 +1,7 @@
 from flask import Flask, request
 from flask_restful import Resource, Api
 import json
+from mock_fabricantes import Fabricante
 
 # Inicializar o Flask
 app = Flask(__name__)
@@ -53,7 +54,7 @@ class ListaProdutos(Resource):
 
 api.add_resource(Produto, '/produto/<int:id>')
 api.add_resource(ListaProdutos, '/produto')
-##api.add_resource(Habilidades, '/habilidades/')
+api.add_resource(Fabricante, '/fabricante/')
 
 if __name__ == '__main__':
     app.run(debug=True)
