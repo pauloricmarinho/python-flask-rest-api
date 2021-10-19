@@ -1,7 +1,8 @@
 from flask import Flask, request
 from flask_restful import Resource, Api
 import json
-from mock_fabricantes import Fabricante
+#from mock_fabricantes import Fabricante
+from model import Produto, Fabricante
 
 # Inicializar o Flask
 app = Flask(__name__)
@@ -19,42 +20,70 @@ produtos = [
 ]
 
 # Recuperar um Produto por ID, também usando para Remover ou Alterar um Produto
-class Produto(Resource):
+class ProdutoService(Resource):
     def get(self, id):
+        produto = Produto.query.filter_by(id=id).first()
         try:
-            response = produtos[id]
+            response = {
+            'nome':produto.nome,
+            'valor':produto.valor,
+            'id':produto.id,
+            'fabricante':produto.fabricante.nome
+            }
         except IndexError:
             mensagem = 'Produto de ID {} não existe'.format(id)
             response = {'status':'erro', 'mensagem':mensagem}
-        except Exception:
-            mensagem = 'Erro desconhecido. Procure o administrador da API'
-            response = {'status':'erro', 'mensagem':mensagem}
+        except AttributeError:
+            response = {
+                'status':'error',
+                'mensagem':'Produto nao encontrado...'
+            }
         return response
 
     def put(self, id):
-        dados = json.loads(request.data)
-        produtos[id] = dados
-        return dados
+        produto = Produto.query.filter_by(id=id).first()
+        dados = request.json
+        if 'nome' in dados:
+            produto.nome = dados['nome']
+        if 'valor' in dados:
+            produto.valor = dados['valor']
+        produto.save()
+        response = {
+            'id':produto.id,
+            'nome':produto.nome,
+            'valor':produto.valor
+        }
+        return response
 
     def delete(self, id):
-        produtos.pop(id)
-        return {'status':'sucesso', 'mensagem':'Registro Excluído com Sucesso'}
+        produto = Produto.query.filter_by(id=id).first()
+        mensagem = 'Produto {} excluido com sucesso'.format(produto.nome)
+        produto.delete()
+        return {'status':'sucesso', 'mensagem':mensagem}
 
 # Lista os Produtos Cadastrados e Permite a Inclusão de Novos Produtos
-class ListaProdutos(Resource):
+class ListaProdutosService(Resource):
     def get(self):
-        return produtos
+
+        produtos = Produto.query.all()
+        response = [{'id':i.id, 'nome':i.nome, 'valor':i.valor} for i in produtos]
+        return response
+        
 
     def post(self):
-        dados = json.loads(request.data)
-        posicao = len(produtos)
-        dados['id'] = posicao
-        produtos.append(dados)
-        return produtos[posicao]
+        dados = request.json
+        produto = Produto(nome=dados['nome'], valor=dados['valor'], fabricante_id=dados['fabricante_id'])
+        produto.save()
+        response = {
+            'id':produto.id,
+            'nome':produto.nome,
+            'valor':produto.valor
+        }
+        return response
 
-api.add_resource(Produto, '/produto/<int:id>')
-api.add_resource(ListaProdutos, '/produto')
-api.add_resource(Fabricante, '/fabricante/')
+api.add_resource(ProdutoService, '/produto/<int:id>')
+api.add_resource(ListaProdutosService, '/produto')
+#api.add_resource(Fabricante, '/fabricante/')
 
 if __name__ == '__main__':
     app.run(debug=True)
