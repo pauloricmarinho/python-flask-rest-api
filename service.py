@@ -2,7 +2,7 @@ from flask import Flask, request
 from flask_restful import Resource, Api
 import json
 #from mock_fabricantes import Fabricante
-from model import Produto, Fabricante
+from model import Produto, Fabricante, Usuario
 from flask_httpauth import HTTPBasicAuth
 
 # Inicializar o Flask
@@ -21,15 +21,21 @@ produtos = [
     {'id':7,'nome':'PS5 4K 1TB','valor':1999.99,'categoria':['Games','Consone'],'fabricante':'Sony'},    
 ]
 
-USER_MOCK = {
-     'prmarinho':'1q2w3e4r' 
-}
+#USER_MOCK = {
+#     'prmarinho':'1q2w3e4r' 
+#}
+
+#@auth.verify_password
+#def verificacao(login, senha):
+#     if not (login, senha):
+#         return False
+#     return USER_MOCK.get(login) == senha
 
 @auth.verify_password
 def verificacao(login, senha):
-     if not (login, senha):
-         return False
-     return USER_MOCK.get(login) == senha
+    if not (login, senha):
+        return False
+    return Usuario.query.filter_by(login=login, senha=senha).first()
 
 # Recuperar um Produto por ID, também usando para Remover ou Alterar um Produto
 class ProdutoService(Resource):

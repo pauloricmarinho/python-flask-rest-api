@@ -1,4 +1,4 @@
-from model import Fabricante, Produto
+from model import Fabricante, Produto, Usuario
 
 # Insere dados na tabela pessoa
 def insere_fabricante():
@@ -35,10 +35,21 @@ def consulta_produto():
     produtos = Produto.query.all()
     print(produtos)
 
+def insere_usuario(login, senha):
+    usuario = Usuario(login=login, senha=senha)
+    usuario.save()
+
+def consulta_todos_usuarios():
+    usuarios = Usuario.query.all()
+    print(usuarios)
+
+
 if __name__ == '__main__':
     #insere_fabricante()
     #altera_fabricante()
     #exclui_fabricante()
-    consulta_fabricante()
-    insere_produto()
-    consulta_produto()
+    #consulta_fabricante()
+    #insere_produto()
+    #consulta_produto()
+    insere_usuario('prmarinho', '01234')
+    consulta_todos_usuarios()
