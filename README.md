@@ -25,3 +25,10 @@ pip3 install flask-httpauth
 pip3 install flake pytest
 ```
  
+ ### Docker Project [Python with Alpine 3.14](https://hub.docker.com/_/python)
+
+```
+docker build -t srv-pyhton-flask .
+docker run -itd -p 8080:5000 --rm --name api-pyhton-flask  srv-pyhton-flask
+curl server.docker:8080/produto
+```
