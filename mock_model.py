@@ -53,4 +53,3 @@ if __name__ == '__main__':
     #consulta_produto()
     insere_usuario('prmarinho', '01234')
     consulta_todos_usuarios()
-    test_send_http()
