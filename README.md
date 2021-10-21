@@ -5,11 +5,15 @@ Repositório Exempo API Restful com Flask API e HTTP Basic
 
 ### Enviroment Python
 
-```py -3 -m venv env_service```
+```
+py -3 -m venv env_service
+```
 
 ### Active Enviromnent
 
-`env_service/Scripts/activate`
+```
+env_service/Scripts/activate
+```
 
 ### Install Flask, Flash-Restful, FlaskHTTPAuth, SQLAlchemy, PyTest
 
