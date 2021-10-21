@@ -1,9 +1,5 @@
 from model import Fabricante, Produto, Usuario
-import pytest
 
-@pytest.mark.smoke
-def test_send_http():
-    assert True
 # Insere dados na tabela pessoa
 def insere_fabricante():
     fabr = Fabricante(id=2,nome='Google')
